@@ -37,6 +37,8 @@ urlpatterns = [
     path('events/delete/<int:event_id>/', views.delete_event, name='delete_event'),
     path('log-class/delete/<int:log_id>/', views.delete_class_log, name='delete_class_log'),
     path('profile/delete/', views.delete_account, name='delete_account'),
+    path('edit-student-roll/<int:student_id>/', views.edit_student_roll, name='edit_student_roll'),
+    path('delete-student/<int:student_id>/', views.delete_student, name='delete_student'),
 
 
 ]

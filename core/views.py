@@ -109,7 +109,12 @@ def dashboard(request):
         return render(request, 'dashboard_faculty.html', context)
         
     elif user.user_type == 'coordinator':
-        context = {'coordinator_profile': user.coordinator_profile}
+        # Get all registered students for administration
+        all_students = Student.objects.all().order_by('batch', 'roll_number')
+        context = {
+            'coordinator_profile': user.coordinator_profile,
+            'all_students': all_students
+        }
         return render(request, 'dashboard_coordinator.html', context)
     else:
         raise PermissionDenied("You do not have a valid role assigned")
@@ -340,3 +345,40 @@ def delete_account(request):
         return redirect('home')
     
     return render(request, 'registration/confirm_delete_account.html')
+
+@login_required
+def edit_student_roll(request, student_id):
+    if request.user.user_type not in ['faculty', 'coordinator']:
+        raise PermissionDenied("Only Faculty or Coordinators can edit student records.")
+    
+    student = get_object_or_404(Student, id=student_id)
+    
+    if request.method == 'POST':
+        new_roll = request.POST.get('roll_number')
+        if new_roll:
+            # Check for uniqueness if changed
+            if new_roll != student.roll_number and Student.objects.filter(roll_number=new_roll).exists():
+                messages.error(request, f"Roll number '{new_roll}' is already assigned to another student.")
+            else:
+                student.roll_number = new_roll
+                student.save()
+                messages.success(request, f"Successfully updated roll number for {student.user.get_full_name()}.")
+        return redirect('dashboard')
+    
+    return render(request, 'registration/edit_student_roll.html', {'student': student})
+
+@login_required
+def delete_student(request, student_id):
+    if request.user.user_type not in ['faculty', 'coordinator']:
+        raise PermissionDenied("Only Faculty or Coordinators can delete student records.")
+    
+    student = get_object_or_404(Student, id=student_id)
+    user = student.user
+    full_name = user.get_full_name()
+    
+    if request.method == 'POST':
+        user.delete() # Also deletes student profile due to CASCADE
+        messages.success(request, f"Student account for {full_name} has been permanently removed.")
+        return redirect('dashboard')
+    
+    return render(request, 'registration/confirm_delete_student.html', {'student': student})

@@ -120,7 +120,13 @@
                                     class="px-3 py-1 bg-white text-navy-800 rounded-lg text-xs font-mono font-bold border border-navy-200 shadow-sm">
                                     {{ student.roll_number }}
                                 </span></td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right">
+                            <td class="px-6 py-4 whitespace-nowrap text-right flex items-center justify-end gap-2">
+                                <a href="{% url 'edit_student_roll' student.id %}" class="p-2 text-navy-400 hover:text-navy-900 hover:bg-navy-50 rounded-lg transition-all" title="Edit Roll Number">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-5M16.5 3.5a2.121 2.121 0 113 3L11.707 15.293a1 1 0 01-.39.242l-3 1a1 1 0 01-1.266-1.265l1-3a1 1 0 01.242-.39L16.5 3.5z"></path></svg>
+                                </a>
+                                <a href="{% url 'delete_student' student.id %}" class="p-2 text-burgundy-400 hover:text-burgundy-700 hover:bg-burgundy-50 rounded-lg transition-all" title="Delete Student">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                </a>
                                 <form action="{% url 'promote_to_coordinator' student.id %}" method="POST"
                                     class="inline" onsubmit="return confirm('Promote this student to Coordinator?')">
                                     {% csrf_token %}

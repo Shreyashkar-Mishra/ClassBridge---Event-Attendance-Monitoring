@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="max-w-2xl mx-auto py-12 px-4">
+    <div class="bg-white rounded-3xl shadow-xl border border-burgundy-100 overflow-hidden">
+        <div class="bg-burgundy-900 px-8 py-10 text-white relative">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-3xl -mr-16 -mt-16 opacity-20"></div>
+            <h2 class="text-3xl font-serif font-bold tracking-tight mb-2">Delete Student Account</h2>
+            <p class="text-burgundy-300 font-medium">Removing records for {{ student.user.get_full_name }}</p>
+        </div>
+        
+        <div class="p-8 sm:p-10">
+            <div class="p-6 bg-burgundy-50 border-2 border-burgundy-100 rounded-2xl mb-8 flex items-start gap-4 shadow-inner">
+                <svg class="w-8 h-8 text-burgundy-700 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                </svg>
+                <div>
+                    <h4 class="text-burgundy-900 font-bold mb-1">Permanent Removal Warning</h4>
+                    <p class="text-burgundy-800 text-sm leading-relaxed font-medium">This action cannot be undone. All data associated with this student, including their login credentials, event history, and academic records, will be erased from the system.</p>
+                </div>
+            </div>
+
+            <form method="POST" class="space-y-6">
+                {% csrf_token %}
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <button type="submit" 
+                            class="flex-1 inline-flex justify-center items-center px-8 py-4 border border-transparent text-base font-bold rounded-2xl text-white bg-burgundy-700 hover:bg-burgundy-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-burgundy-700 shadow-lg shadow-burgundy-100 transition-all hover:-translate-y-0.5">
+                        Confirm Deletion
+                    </button>
+                    <a href="{% url 'dashboard' %}" 
+                       class="flex-1 inline-flex justify-center items-center px-8 py-4 border-2 border-navy-100 text-base font-bold rounded-2xl text-navy-700 bg-white hover:bg-navy-50 transition-all decoration-0">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

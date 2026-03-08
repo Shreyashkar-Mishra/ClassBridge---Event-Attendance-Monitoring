@@ -89,13 +89,37 @@
             <h3 class="text-2xl font-serif font-bold text-navy-900 mb-2">Academic Roster</h3>
             <p class="text-slate-500 text-sm font-medium mb-6 leading-relaxed">Monitor student participation and oversee
                 attendance trends across different academic batches.</p>
-            <button onclick="alert('Roster management module coming soon.')"
-                class="inline-flex items-center text-gold-600 font-bold hover:text-gold-700 transition-colors text-sm underline underline-offset-4 decoration-2">View
-                Institutional Roster<svg class="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" fill="none"
-                    stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                </svg></button>
+            <div class="overflow-hidden bg-white/50 rounded-xl border border-gold-100">
+                <table class="min-w-full divide-y divide-gold-100">
+                    <thead class="bg-gold-50/50">
+                        <tr>
+                            <th class="px-4 py-3 text-left text-[10px] font-bold text-gold-700 uppercase tracking-widest">Student</th>
+                            <th class="px-4 py-3 text-left text-[10px] font-bold text-gold-700 uppercase tracking-widest">Batch</th>
+                            <th class="px-4 py-3 text-right text-[10px] font-bold text-gold-700 uppercase tracking-widest">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gold-50">
+                        {% for student in all_students %}
+                        <tr class="hover:bg-gold-50/30 transition-all">
+                            <td class="px-4 py-3 whitespace-nowrap">
+                                <div class="text-xs font-bold text-navy-900">{{ student.user.get_full_name }}</div>
+                            </td>
+                            <td class="px-4 py-3 whitespace-nowrap text-[10px] font-bold text-slate-600">{{ student.batch }}</td>
+                            <td class="px-4 py-3 whitespace-nowrap text-right flex items-center justify-end gap-1">
+                                <a href="{% url 'edit_student_roll' student.id %}" class="p-1.5 text-navy-400 hover:text-navy-900 transition-all" title="Edit Roll Number">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-5M16.5 3.5a2.121 2.121 0 113 3L11.707 15.293a1 1 0 01-.39.242l-3 1a1 1 0 01-1.266-1.265l1-3a1 1 0 01.242-.39L16.5 3.5z"></path></svg>
+                                </a>
+                                <a href="{% url 'delete_student' student.id %}" class="p-1.5 text-burgundy-400 hover:text-burgundy-700 transition-all" title="Delete Student">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="3" class="px-4 py-10 text-center text-slate-400 text-xs">No students registered.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
