@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="max-w-7xl mx-auto py-6 animate-fade-in-down">
+    <div class="bg-burgundy-800 rounded-3xl shadow-xl shadow-burgundy-900/20 mb-8 relative overflow-hidden">
+        <div class="absolute right-0 top-0 w-64 h-64 bg-gradient-to-br from-burgundy-700 to-burgundy-600 rounded-full blur-3xl -mr-20 -mt-20 opacity-60"></div>
+        <div class="absolute right-32 bottom-0 w-40 h-40 bg-gold-500 rounded-full blur-2xl opacity-60"></div>
+        <div class="md:flex md:items-center md:justify-between px-8 py-10 relative z-10">
+            <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-3 mb-2"><span class="inline-flex items-center px-4 py-1.5 rounded bg-navy-800 text-gold-400 text-xs font-bold uppercase tracking-widest border border-navy-700">Institutional Event</span><span class="text-navy-300 font-bold text-sm">{{ event.date|date:"F d, Y" }}</span></div>
+                <h2 class="text-3xl font-serif font-bold text-white tracking-tight sm:truncate">{{ event.title }}</h2>
+                <p class="text-navy-300 mt-2 text-base font-medium max-w-2xl">{{ event.description }}</p>
+            </div>
+            <div class="mt-6 flex flex-col sm:flex-row md:ml-4 gap-3 relative z-10">
+                <a href="{% url 'event_list' %}" class="inline-flex items-center px-5 py-2.5 border border-navy-700 shadow-sm text-sm font-bold rounded-md text-navy-100 bg-navy-800 hover:bg-navy-700 transition-colors justify-center">Return to Events</a>
+                <a href="{% url 'email_preview' event.id %}" class="inline-flex items-center justify-center px-6 py-2.5 border border-transparent shadow-sm text-sm font-bold rounded-md text-navy-900 bg-gold-500 hover:bg-gold-400 transition-colors"><svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>Generate Report</a>
+            </div>
+        </div>
+    </div>
+    <div class="bg-white shadow-sm border border-slate-200 rounded-xl overflow-hidden mb-12">
+        <div class="px-6 py-5 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
+            <h3 class="text-lg font-serif font-bold text-navy-900 leading-6">Official Roster</h3>
+            <span class="inline-flex items-center px-3 py-1 rounded bg-white text-navy-700 text-xs font-bold border border-slate-200">{{ participants|length }} Records</span>
+        </div>
+        {% if participants %}
+        <div class="overflow-x-auto min-h-[400px]">
+            <table class="min-w-full divide-y divide-slate-200">
+                <thead class="bg-slate-50 text-left">
+                    <tr>
+                        <th scope="col" class="px-8 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest">Roll Number</th>
+                        <th scope="col" class="px-8 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest">Student Information</th>
+                        <th scope="col" class="px-8 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest">Registration Date</th>
+                        <th scope="col" class="px-8 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest text-center">Verification Protocol</th>
+                        <th scope="col" class="px-8 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest text-right">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-slate-100">
+                    {% for p in participants %}
+                    <tr class="hover:bg-slate-50/50 transition-colors">
+                        <td class="px-8 py-5 whitespace-nowrap"><span class="inline-flex items-center px-2.5 py-1 rounded font-mono text-xs font-bold bg-navy-50 text-navy-700 border border-navy-100">{{ p.student.roll_number }}</span></td>
+                        <td class="px-8 py-5 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 h-10 w-10 rounded bg-navy-100 text-navy-600 flex items-center justify-center font-bold text-sm border border-navy-200">{{ p.student.user.first_name|first }}{{ p.student.user.last_name|first }}</div>
+                                <div class="ml-4">
+                                    <div class="text-sm font-bold text-slate-900">{{ p.student.user.first_name }} {{ p.student.user.last_name }}</div>
+                                    <div class="text-xs text-slate-500">{{ p.student.user.email }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-8 py-5 whitespace-nowrap text-sm text-slate-500 font-medium">{{ p.joined_at|date:"M d, Y" }} <span class="text-slate-400 text-xs ml-1">{{ p.joined_at|time:"h:i A" }}</span></td>
+                        <td class="px-8 py-5 whitespace-nowrap">
+                            <div class="flex justify-center">
+                                {% if p.is_verified %}<span class="inline-flex items-center px-2.5 py-1 rounded bg-green-50 text-green-700 text-xs font-bold border border-green-200"><svg class="mr-1.5 h-3 w-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Verified Present</span>
+                                {% else %}<span class="inline-flex items-center px-2.5 py-1 rounded bg-amber-50 text-amber-700 text-xs font-bold border border-amber-200"><svg class="mr-1.5 h-3 w-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path></svg>Pending Review</span>{% endif %}
+                            </div>
+                        </td>
+                        <td class="px-8 py-5 whitespace-nowrap text-right text-sm font-medium">
+                            <form method="POST" action="{% url 'verify_participation' p.id %}">
+                                {% csrf_token %}{% if p.is_verified %}<button type="submit" class="inline-flex items-center px-3 py-1.5 border border-slate-300 shadow-sm text-xs font-bold rounded text-slate-700 bg-white hover:bg-slate-50 transition-colors">Revoke</button>{% else %}<button type="submit" class="inline-flex items-center px-3 py-1.5 border border-transparent shadow-sm text-xs font-bold rounded text-white bg-green-600 hover:bg-green-700 transition-colors">Verify Attendance</button>{% endif %}
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="px-8 py-16 flex flex-col items-center justify-center text-center bg-white rounded-b-xl"><div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center border border-slate-200 mb-4"><svg class="h-10 w-10 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg></div><h3 class="text-lg font-bold text-slate-900 mb-1">No Participants Yet</h3><p class="text-sm text-slate-500 max-w-sm">No students registered yet.</p></div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

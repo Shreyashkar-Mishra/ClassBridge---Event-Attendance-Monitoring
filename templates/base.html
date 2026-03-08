@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClassBridge | Academic Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,400&display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'], serif: ['Merriweather', 'serif'], },
+                    colors: {
+                        navy: { 50: '#f0f4f8', 100: '#d9e2ec', 200: '#bcccdc', 300: '#9fb3c8', 400: '#829ab1', 500: '#627d98', 600: '#486581', 700: '#334e68', 800: '#243b53', 900: '#102a43', },
+                        burgundy: { 50: '#fcf3f2', 100: '#f8e0e0', 200: '#ecc6c6', 300: '#dfa3a3', 400: '#d07b7b', 500: '#be5050', 600: '#a33333', 700: '#882222', 800: '#731e1e', 900: '#601d1d', },
+                        gold: { 400: '#f6ad55', 500: '#ed8936', 600: '#dd6b20', }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #f8fafc;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23102a43' fill-opacity='0.02'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+    </style>
+</head>
+
+<body class="text-slate-800 antialiased min-h-screen flex flex-col font-sans">
+    <nav class="bg-navy-900 border-b-4 border-burgundy-700 sticky top-0 z-50 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20">
+                <div class="flex items-center">
+                    <div
+                        class="w-10 h-12 bg-burgundy-700 flex items-center justify-center shadow-inner rounded-b-lg mr-4 border-t-2 border-gold-500">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 14l9-5-9-5-9 5 9 5z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z">
+                            </path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14v6"></path>
+                        </svg>
+                    </div>
+                    <a href="{% url 'home' %}" class="flex flex-col">
+                        <span class="font-serif text-2xl font-bold text-white tracking-wide">ClassBridge</span>
+                        <span class="text-gold-400 text-[10px] font-bold uppercase tracking-widest">Academic
+                            Portal</span>
+                    </a>
+                </div>
+                <div class="flex items-center space-x-6">
+                    {% if user.is_authenticated %}
+                    <div class="hidden md:flex items-center px-3 py-1 bg-navy-800 rounded border border-navy-700">
+                        <span class="text-xs font-bold text-navy-300 uppercase tracking-widest">
+                            {{ user.get_user_type_display }}
+                        </span>
+                    </div>
+                    <div class="h-6 w-px bg-navy-700 hidden md:block"></div>
+                    <a href="{% url 'dashboard' %}"
+                        class="text-navy-100 font-semibold hover:text-white hover:bg-navy-800 px-4 py-2 rounded-md transition-colors duration-200">Dashboard</a>
+                    <a href="{% url 'event_list' %}"
+                        class="text-navy-100 font-semibold hover:text-white hover:bg-navy-800 px-4 py-2 rounded-md transition-colors duration-200">Events</a>
+                    <form action="{% url 'logout' %}" method="post" class="inline">
+                        {% csrf_token %}
+                        <button type="submit"
+                            class="ml-4 font-bold text-sm bg-burgundy-700 hover:bg-burgundy-600 text-white px-5 py-2.5 rounded shadow transition-colors duration-200 border border-burgundy-600">Sign
+                            Out</button>
+                    </form>
+                    {% else %}
+                    <a href="{% url 'login' %}"
+                        class="font-bold text-sm bg-gold-600 hover:bg-gold-500 text-white px-6 py-2.5 rounded shadow transition-colors duration-200 border border-gold-500">Faculty
+                        & Student Login</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    {% if messages %}
+    <div class="absolute top-24 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-2xl px-4 flex flex-col gap-3">
+        {% for message in messages %}
+        <div
+            class="shadow-lg rounded-lg border-l-4 p-4 flex items-start gap-4 {% if message.tags == 'error' %}bg-red-50 border-red-700 text-red-900{% elif message.tags == 'success' %}bg-green-50 border-green-700 text-green-900{% else %}bg-blue-50 border-blue-700 text-blue-900{% endif %}">
+            <div class="flex-shrink-0 mt-0.5">
+                {% if message.tags == 'success' %}<svg class="h-5 w-5 text-green-700" fill="currentColor"
+                    viewBox="0 0 20 20">
+                    <path fill-rule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clip-rule="evenodd"></path>
+                </svg>{% elif message.tags == 'error' %}<svg class="h-5 w-5 text-red-700" fill="currentColor"
+                    viewBox="0 0 20 20">
+                    <path fill-rule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                        clip-rule="evenodd"></path>
+                </svg>{% else %}<svg class="h-5 w-5 text-blue-700" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd"
+                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                        clip-rule="evenodd"></path>
+                </svg>{% endif %}
+            </div>
+            <div class="font-medium text-sm">{{ message }}</div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <main class="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 relative">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="bg-navy-900 border-t border-navy-800 text-white mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between">
+            <div class="flex items-center gap-2 mb-4 md:mb-0 opacity-70"><svg class="w-5 h-5" fill="none"
+                    stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z">
+                    </path>
+                </svg><span class="text-sm font-semibold tracking-wider font-serif">CLASSBRIDGE INSTITUTE</span></div>
+            <p class="text-center text-sm font-semibold opacity-50 font-sans">&copy; {% now 'Y' %} Academic Information
+                Systems.</p>
+            <div class="flex gap-4 mt-4 md:mt-0 text-sm font-semibold opacity-70">
+                <a href="#" class="hover:text-gold-400 transition-colors">Privacy</a>
+                <a href="#" class="hover:text-gold-400 transition-colors">Terms</a>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>

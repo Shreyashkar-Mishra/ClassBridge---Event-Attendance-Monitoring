@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto py-8">
+    <div class="mb-10 animate-fade-in-down">
+        <!-- Breadcrumb -->
+        <div class="flex items-center gap-2 text-sm font-bold text-navy-500 uppercase tracking-widest mb-3">
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                </path>
+            </svg>
+            <span>Faculty</span>
+            <span class="text-navy-300">/</span>
+            <span class="text-burgundy-700 tracking-normal">Log Session</span>
+        </div>
+
+        <div
+            class="flex flex-col sm:flex-row sm:items-end justify-between bg-white p-8 rounded-2xl shadow-sm border border-navy-200">
+            <div>
+                <h2 class="text-3xl font-serif font-bold text-navy-900 tracking-tight">Log Class Session</h2>
+                <p class="text-slate-500 font-medium mt-1">Submit curriculum updates and assignments for your students.
+                </p>
+            </div>
+            <div class="mt-4 sm:mt-0">
+                <a href="{% url 'dashboard' %}"
+                    class="text-sm font-bold text-navy-600 hover:text-navy-900 border-b border-navy-200 transition-colors pb-0.5">
+                    &larr; Back to Portal
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white shadow-xl rounded-2xl border border-navy-200 overflow-hidden relative">
+        <div
+            class="absolute top-0 right-0 w-32 h-32 bg-gold-50 rounded-full blur-3xl -mr-10 -mt-10 opacity-60 pointer-events-none">
+        </div>
+
+        <div class="px-8 py-10 sm:p-12 relative z-10">
+            <form method="POST" class="space-y-8">
+                {% csrf_token %}
+
+                {% for field in form %}
+                <div class="space-y-2">
+                    <label for="{{ field.id_for_label }}"
+                        class="block text-xs font-bold text-navy-800 uppercase tracking-widest px-1">
+                        {{ field.label }}
+                    </label>
+                    <div class="relative group">
+                        {{ field }}
+                    </div>
+                    {% if field.help_text %}
+                    <p class="text-[11px] text-slate-500 font-medium px-1 italic">{{ field.help_text|safe }}</p>
+                    {% endif %}
+                    {% if field.errors %}
+                    {% for error in field.errors %}
+                    <p class="text-xs text-red-600 font-bold px-1">{{ error }}</p>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+                {% endfor %}
+
+                <div class="pt-6 border-t border-slate-100 flex justify-end gap-4">
+                    <button type="submit"
+                        class="inline-flex justify-center py-3.5 px-8 border border-transparent shadow-lg text-base font-bold rounded-xl text-white bg-navy-900 hover:bg-navy-800 transition-all hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-navy-900">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        Publish to Student Portals
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style type="text/tailwindcss">
+    input[type="text"],
+    input[type="date"],
+    textarea {
+        @apply w-full px-4 py-3.5 border border-navy-200 rounded-xl bg-navy-50/30 text-navy-900 font-medium shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-burgundy-600 focus:border-burgundy-600 focus:bg-white text-sm;
+    }
+    textarea {
+        @apply min-h-[120px];
+    }
+</style>
+{% endblock %}

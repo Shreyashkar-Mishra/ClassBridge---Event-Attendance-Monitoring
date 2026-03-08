@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="max-w-5xl mx-auto py-8 px-4">
+    <div class="bg-white rounded-2xl shadow-sm border border-navy-200 p-8 sm:p-10 mb-8 relative overflow-hidden group">
+        <div class="md:flex md:items-center md:justify-between mb-8 border-b border-navy-100 pb-6">
+            <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 text-sm font-bold text-navy-500 uppercase tracking-widest mb-2"><svg
+                        class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
+                        </path>
+                    </svg><span>Administration Portal</span></div>
+                <h2 class="text-3xl font-serif font-bold text-navy-900 tracking-tight sm:truncate">Coordinator Dashboard
+                </h2>
+                <p class="text-slate-500 mt-1 text-base font-medium">Oversee institutional events and student
+                    administrative records.</p>
+            </div>
+            <div class="mt-4 flex md:mt-0 md:ml-4 gap-3"><a href="{% url 'create_event' %}"
+                    class="inline-flex items-center px-6 py-3 border border-transparent shadow-lg text-sm font-bold rounded-xl text-white bg-burgundy-700 hover:bg-burgundy-800 transition-all hover:-translate-y-0.5"><svg
+                        class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>Schedule Event</a><a href="{% url 'delete_account' %}"
+                    class="inline-flex items-center px-6 py-3 border border-burgundy-200 shadow-sm text-sm font-bold rounded-xl text-burgundy-700 bg-white hover:bg-burgundy-50 transition-all">Delete Account</a></div>
+        </div>
+        <div class="bg-navy-900 shadow-xl rounded-2xl border border-navy-800 overflow-hidden relative">
+            <div
+                class="absolute top-0 right-0 w-64 h-64 bg-burgundy-700 rounded-full blur-3xl -mr-32 -mt-32 opacity-20">
+            </div>
+            <div class="absolute bottom-0 left-0 w-48 h-48 bg-gold-600 rounded-full blur-3xl -ml-24 -mb-24 opacity-10">
+            </div>
+            <div class="px-8 py-10 relative z-10">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10 text-white">
+                    <div class="flex items-center gap-5">
+                        <div
+                            class="h-16 w-16 bg-white/10 rounded-full flex items-center justify-center text-white border border-white/20 shadow-inner text-xl font-bold">
+                            {{ user.first_name|first|default:"C" }}{{ user.last_name|first|default:"D" }}
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-bold uppercase tracking-widest text-navy-300 mb-1">Administrative
+                                Role</p>
+                            <p class="text-xl font-bold text-white tracking-tight">
+                                {{ user.get_full_name }}
+                            </p>
+                            <span
+                                class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-burgundy-700 text-white border border-burgundy-600 mt-1 uppercase tracking-widest">
+                                {{ user.get_user_type_display }}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-6"><a href="{% url 'event_list' %}"
+                            class="flex-grow px-5 py-3.5 bg-white/10 hover:bg-white/20 rounded-xl font-bold border border-white/20 inline-flex items-center justify-center transition-all text-sm group tracking-tight"><svg
+                                class="w-5 h-5 mr-3 text-gold-400 group-hover:scale-110 transition-transform"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                </path>
+                            </svg>Manage Event Repository</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="grid md:grid-cols-2 gap-8">
+        <div class="bg-white rounded-2xl shadow-sm border border-navy-200 p-8 hover:shadow-md transition-all group">
+            <div
+                class="w-14 h-14 bg-navy-50 rounded-2xl flex items-center justify-center text-navy-600 mb-6 border border-navy-100 group-hover:bg-navy-100 transition-colors">
+                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01">
+                    </path>
+                </svg></div>
+            <h3 class="text-2xl font-serif font-bold text-navy-900 mb-2">Event Registry</h3>
+            <p class="text-slate-500 text-sm font-medium mb-6 leading-relaxed">Schedule, edit, and audit official
+                institutional events. Manage participant rosters.</p>
+            <a href="{% url 'event_list' %}"
+                class="inline-flex items-center text-burgundy-700 font-bold hover:text-burgundy-900 transition-colors text-sm underline underline-offset-4 decoration-2">Access
+                Official Registry<svg class="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" fill="none"
+                    stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg></a>
+        </div>
+        <div class="bg-white rounded-2xl shadow-sm border border-navy-200 p-8 hover:shadow-md transition-all group">
+            <div
+                class="w-14 h-14 bg-gold-50 rounded-2xl flex items-center justify-center text-gold-600 mb-6 border border-gold-100 group-hover:bg-gold-100 transition-colors">
+                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z">
+                    </path>
+                </svg></div>
+            <h3 class="text-2xl font-serif font-bold text-navy-900 mb-2">Academic Roster</h3>
+            <p class="text-slate-500 text-sm font-medium mb-6 leading-relaxed">Monitor student participation and oversee
+                attendance trends across different academic batches.</p>
+            <button onclick="alert('Roster management module coming soon.')"
+                class="inline-flex items-center text-gold-600 font-bold hover:text-gold-700 transition-colors text-sm underline underline-offset-4 decoration-2">View
+                Institutional Roster<svg class="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" fill="none"
+                    stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg></button>
+        </div>
+    </div>
+</div>
+{% endblock %}

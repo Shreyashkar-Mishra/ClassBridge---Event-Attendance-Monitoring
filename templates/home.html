@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Academic Hero Section -->
+<div class="relative overflow-hidden bg-white rounded-xl shadow-md border border-slate-200 animate-fade-in-up">
+    <!-- Traditional Overlay Graphic -->
+    <div class="absolute inset-0 z-0">
+        <!-- Solid background side -->
+        <div class="absolute inset-0 bg-navy-900 sm:w-2/3 lg:w-3/5"
+            style="clip-path: polygon(0 0, 100% 0, 85% 100%, 0% 100%);"></div>
+        <!-- Right side image placeholder / pattern -->
+        <div class="absolute inset-y-0 right-0 w-full sm:w-1/2 lg:w-1/2 bg-slate-100 opacity-50"
+            style="background-image: repeating-linear-gradient(45deg, #e2e8f0 0, #e2e8f0 2px, transparent 2px, transparent 8px);">
+        </div>
+    </div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
+        <div class="max-w-xl text-left">
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold text-white leading-tight">
+                Academic Excellence, <span class="text-gold-400">Streamlined.</span>
+            </h1>
+            <p class="mt-6 text-lg sm:text-xl text-navy-100 font-sans font-medium leading-relaxed max-w-lg">
+                The official portal for managing course logs, registering for departmental events, and viewing
+                faculty-curated AI study resources.
+            </p>
+
+            <div class="mt-10 flex flex-col sm:flex-row gap-4">
+                <a href="{% url 'login' %}"
+                    class="inline-flex justify-center items-center px-8 py-3.5 border-2 border-transparent text-base font-bold rounded-md text-navy-900 bg-gold-500 hover:bg-gold-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-navy-900 focus:ring-gold-500 transition-all shadow-md">
+                    Access Portal
+                    <svg class="ml-2 -mr-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                            d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                            clip-rule="evenodd"></path>
+                    </svg>
+                </a>
+                <a href="{% url 'register_faculty' %}"
+                    class="inline-flex justify-center items-center px-8 py-3.5 border-2 border-navy-400 text-base font-bold rounded-md text-white hover:bg-navy-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-navy-900 focus:ring-navy-400 transition-all">
+                    Faculty Onboarding
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Core Institutional Features -->
+<div id="features" class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
+
+    <!-- Feature 1 -->
+    <div
+        class="bg-white rounded-lg shadow-sm border border-slate-200 p-8 hover:shadow-md transition-shadow delay-100 animate-fade-in-up">
+        <div
+            class="w-14 h-14 bg-navy-50 rounded-lg flex items-center justify-center text-navy-700 mb-6 border border-navy-100">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253">
+                </path>
+            </svg>
+        </div>
+        <h3 class="text-xl font-bold font-serif text-slate-900 mb-3">Faculty Class Logs</h3>
+        <p class="text-slate-600 font-medium leading-relaxed">Structured syllabi tracking and daily lecture logs to
+            ensure students are always aligned with the departmental curriculum.</p>
+    </div>
+
+    <!-- Feature 2 -->
+    <div
+        class="bg-white rounded-lg shadow-sm border border-slate-200 p-8 hover:shadow-md transition-shadow delay-200 animate-fade-in-up">
+        <div
+            class="w-14 h-14 bg-burgundy-50 rounded-lg flex items-center justify-center text-burgundy-700 mb-6 border border-burgundy-100">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            </svg>
+        </div>
+        <h3 class="text-xl font-bold font-serif text-slate-900 mb-3">Event Registration</h3>
+        <p class="text-slate-600 font-medium leading-relaxed">Official coordination for seminars, lab sessions, and
+            guest lectures. Includes strict attendance verification by faculty coordinators.</p>
+    </div>
+
+    <!-- Feature 3 -->
+    <div
+        class="bg-white rounded-lg shadow-sm border border-slate-200 p-8 hover:shadow-md transition-shadow delay-300 animate-fade-in-up">
+        <div
+            class="w-14 h-14 bg-gold-50 rounded-lg flex items-center justify-center text-gold-600 mb-6 border border-gold-200">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z">
+                </path>
+            </svg>
+        </div>
+        <h3 class="text-xl font-bold font-serif text-slate-900 mb-3">Study Hub Analysis</h3>
+        <p class="text-slate-600 font-medium leading-relaxed">A proprietary AI feature that dynamically links daily
+            course logs directly to supplementary research videos across the university network.</p>
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="mb-10 pb-5 border-b border-navy-200">
+    <div class="md:flex md:items-center md:justify-between">
+        <div class="flex-1 min-w-0">
+            <h2 class="text-3xl font-serif font-bold text-navy-900 tracking-tight sm:truncate">Institutional Events</h2>
+            <p class="text-navy-600 mt-2 text-base font-medium">Browse, manage, and register for official departmental events.</p>
+        </div>
+        {% if request.user.user_type == 'coordinator' %}
+        <div class="mt-4 flex md:mt-0 md:ml-4"><a href="{% url 'create_event' %}" class="inline-flex items-center px-6 py-2.5 border border-transparent shadow-sm text-sm font-bold rounded-md text-white bg-burgundy-700 hover:bg-burgundy-600 transition-colors"><svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>Register New Event</a></div>
+        {% endif %}
+    </div>
+</div>
+{% if events %}
+<div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3 animate-fade-in-down" style="animation-delay: 0.1s;">
+    {% for event in events %}
+    <div class="relative bg-white rounded-3xl shadow-md shadow-slate-200/50 border border-slate-100 overflow-hidden hover:shadow-2xl hover:shadow-indigo-200/50 transition-all duration-300 transform hover:-translate-y-1 flex flex-col group">
+        <div class="absolute inset-0 bg-gradient-to-br from-indigo-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+        <div class="bg-navy-50/50 px-8 py-6 border-b border-navy-100/50 relative z-10">
+            <h2 class="text-2xl font-serif font-bold text-navy-950 tracking-tight">{{ event.title }}</h2>
+            <div class="flex items-center gap-2 mt-3 text-sm font-semibold text-navy-600 bg-white inline-flex px-3 py-1.5 rounded-lg shadow-sm border border-navy-100"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>{{ event.date }}</div>
+        </div>
+        <div class="p-8 flex-grow relative z-10">
+            <p class="text-slate-600 mb-6 leading-relaxed font-medium">{{ event.description }}</p>
+            <div class="flex items-center gap-3 mt-auto">
+                <div class="w-8 h-8 rounded-full bg-gold-100 flex items-center justify-center text-gold-700 font-bold text-xs border border-gold-200">{{ event.created_by.user.first_name|first }}{{ event.created_by.user.last_name|first }}</div>
+                <div>
+                    <p class="text-xs text-slate-400 font-bold uppercase tracking-wider">Posted By</p>
+                    <p class="text-sm text-slate-700 font-bold">{{ event.created_by.user.first_name }} {{ event.created_by.user.last_name }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="px-8 py-6 bg-slate-50/80 border-t border-slate-100 mt-auto relative z-10 backdrop-blur-sm">
+            {% if request.user.user_type == 'student' %}
+            {% if event.id in participated_event_ids %}
+            <span class="inline-flex items-center px-4 py-2 border border-green-200 text-sm font-bold rounded-md text-green-800 bg-green-50 w-full justify-center opacity-80 cursor-default"><svg class="mr-2 h-4 w-4 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>Registered</span>
+            {% else %}<a href="{% url 'join_event' event.id %}" class="inline-flex items-center justify-center px-6 py-2 border border-transparent text-sm font-bold rounded-md shadow-sm text-white bg-navy-700 hover:bg-navy-600 w-full transition-colors">Register Now</a>{% endif %}
+            {% elif request.user.user_type == 'coordinator' %}
+            <div class="flex gap-2">
+                <a href="{% url 'event_participants' event.id %}" class="inline-flex items-center justify-center px-4 py-2 border border-navy-300 text-sm font-bold rounded-md shadow-sm text-navy-800 bg-white hover:bg-navy-50 flex-grow transition-colors">Manage Roster</a>
+                <form action="{% url 'delete_event' event.id %}" method="POST" class="inline" onsubmit="return confirm('Permanently delete this event?')">{% csrf_token %}<button type="submit" class="inline-flex items-center justify-center px-4 py-2 border border-burgundy-200 text-sm font-bold rounded-md text-burgundy-700 bg-burgundy-50 hover:bg-burgundy-700 hover:text-white transition-all shadow-sm"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button></form>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="col-span-full py-20 px-6 text-center bg-white rounded-xl shadow-sm border border-navy-200">
+    <div class="mx-auto w-16 h-16 bg-navy-50 rounded-full flex items-center justify-center mb-4 border border-navy-200"><svg class="w-8 h-8 text-navy-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg></div>
+    <h3 class="mt-2 text-lg font-serif font-bold text-navy-900">No Events Scheduled</h3>
+    <p class="mt-1 text-sm text-slate-500 font-medium">There are currently no official institutional events.</p>
+    {% if request.user.user_type == 'coordinator' %}
+    <div class="mt-6"><a href="{% url 'create_event' %}" class="inline-flex items-center px-5 py-2.5 border border-transparent shadow-sm text-sm font-bold rounded-md text-white bg-burgundy-700 hover:bg-burgundy-600 transition-colors"><svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>Register First Event</a></div>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}

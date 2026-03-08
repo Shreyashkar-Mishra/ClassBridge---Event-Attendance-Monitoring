@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Two Column Layout Container -->
+<div class="min-h-screen flex bg-slate-50">
+
+    <!-- Left Column: Branding / Information -->
+    <div class="hidden lg:flex lg:w-1/2 bg-navy-900 relative overflow-hidden flex-col justify-between p-12">
+        <!-- Abstract Academic Background elements -->
+        <div class="absolute inset-0 bg-navy-800 opacity-90"
+            style="background-image: radial-gradient(circle, #334e68 1px, transparent 1px); background-size: 20px 20px;">
+        </div>
+        <div class="absolute -top-24 -right-24 w-96 h-96 bg-burgundy-700 rounded-full blur-3xl opacity-20"></div>
+        <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-gold-500 rounded-full blur-3xl opacity-10"></div>
+
+        <!-- Top left content -->
+        <div class="relative z-10 flex items-center mb-auto">
+            <div
+                class="w-10 h-10 bg-burgundy-700 flex items-center justify-center rounded-sm mr-4 border border-burgundy-600 shadow-sm">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z">
+                    </path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z">
+                    </path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14v6"></path>
+                </svg>
+            </div>
+            <span class="font-serif text-2xl font-bold text-white tracking-wide">ClassBridge Portal</span>
+        </div>
+
+        <!-- Center message -->
+        <div class="relative z-10 my-auto animate-fade-in-up">
+            <h1 class="text-4xl md:text-5xl font-serif font-bold text-white leading-tight mb-6">
+                Student Registration Center
+            </h1>
+            <p class="text-navy-100 text-lg md:text-xl font-medium max-w-lg leading-relaxed">
+                Create your official student account to access institutional resources, register for events, and manage
+                your academic profile.
+            </p>
+        </div>
+
+        <!-- Bottom elements that give credibility -->
+        <div class="relative z-10 mt-auto flex items-center gap-6 text-navy-200">
+            <div class="text-sm">
+                <p class="font-bold text-white">Institutional Integrity</p>
+                <p class="text-navy-300">Secure access for authenticated students.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Column: Registration Form -->
+    <div
+        class="w-full lg:w-1/2 flex items-center justify-center p-8 sm:p-12 relative bg-white sm:bg-slate-50 lg:bg-white overflow-y-auto">
+
+        <div
+            class="w-full max-w-md my-auto sm:bg-white sm:shadow-xl sm:border sm:border-slate-100 sm:rounded-3xl sm:p-10 lg:bg-transparent lg:shadow-none lg:border-none lg:rounded-none lg:p-0">
+
+            <div class="flex items-center justify-center lg:hidden mb-8 border-b border-slate-200 pb-6">
+                <span class="font-serif text-2xl font-bold text-navy-900 tracking-wide">ClassBridge Portal</span>
+            </div>
+
+            <div class="mb-10 text-center lg:text-left">
+                <h2 class="text-3xl font-serif font-bold text-navy-900 mb-3 tracking-tight">Create Account</h2>
+                <p class="text-slate-500 text-sm font-medium">Please enter your official details to register.</p>
+            </div>
+
+            <!-- Form Error Handling -->
+            {% if form.errors %}
+            <div class="rounded-lg bg-red-50 p-4 mb-8 border border-red-200 shadow-sm">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-3 text-sm text-red-800 font-medium">
+                        <ul class="list-disc pl-5 mt-1">
+                            {% for field in form %}
+                            {% for error in field.errors %}
+                            <li>{{ field.label }}: {{ error }}</li>
+                            {% endfor %}
+                            {% endfor %}
+                            {% for error in form.non_field_errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <form method="POST" class="space-y-5">
+                {% csrf_token %}
+
+                {% for field in form %}
+                <div class="space-y-1">
+                    <label for="{{ field.id_for_label }}"
+                        class="block text-[12px] font-bold text-navy-800 uppercase tracking-widest">
+                        {{ field.label }}
+                    </label>
+                    <div class="relative">
+                        {{ field }}
+                        {% if field.help_text %}
+                        <p class="text-[11px] text-slate-400 mt-1">{{ field.help_text|safe }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+
+                <div class="pt-6">
+                    <button type="submit"
+                        class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-bold text-white bg-burgundy-700 hover:bg-burgundy-800 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-burgundy-900">
+                        Create Official Account
+                    </button>
+                </div>
+            </form>
+
+            <div class="mt-8 pt-6 border-t border-slate-200 text-center">
+                <p class="text-sm text-slate-600 font-medium">Already have an account?
+                    <a href="{% url 'login' %}"
+                        class="font-bold text-navy-700 hover:text-navy-900 transition-colors">Sign In Here</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
