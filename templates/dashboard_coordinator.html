@@ -102,7 +102,12 @@
                         {% for student in all_students %}
                         <tr class="hover:bg-gold-50/30 transition-all">
                             <td class="px-4 py-3 whitespace-nowrap">
-                                <div class="text-xs font-bold text-navy-900">{{ student.user.get_full_name }}</div>
+                                <div class="text-xs font-bold text-navy-900">
+                                    {{ student.user.get_full_name }}
+                                    {% if student.user.user_type == 'coordinator' %}
+                                    <span class="ml-1 px-1.5 py-0.5 bg-burgundy-100 text-burgundy-700 text-[9px] font-bold rounded-full border border-burgundy-200 uppercase tracking-tighter">Coord</span>
+                                    {% endif %}
+                                </div>
                             </td>
                             <td class="px-4 py-3 whitespace-nowrap text-[10px] font-bold text-slate-600">{{ student.batch }}</td>
                             <td class="px-4 py-3 whitespace-nowrap text-right flex items-center justify-end gap-1">

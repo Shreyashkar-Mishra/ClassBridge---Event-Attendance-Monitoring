@@ -151,14 +151,13 @@ def promote_to_coordinator(request, student_id):
     user.user_type = 'coordinator'
     user.save()
     
-    # Create Coordinator profile (batch defaults to student's batch)
-    Coordinator.objects.create(
+    # Create or update Coordinator profile (batch defaults to student's batch)
+    Coordinator.objects.get_or_create(
         user=user,
-        assigned_batch=student.batch
+        defaults={'assigned_batch': student.batch}
     )
     
-    # Remove student profile
-    student.delete()
+    # Keep student profile for visibility in roster
     
     messages.success(request, f"{user.first_name} {user.last_name} has been promoted to Student Coordinator!")
     return redirect('dashboard')
