@@ -95,20 +95,53 @@
             <form method="POST" class="space-y-5">
                 {% csrf_token %}
 
-                {% for field in form %}
-                <div class="space-y-1">
-                    <label for="{{ field.id_for_label }}"
-                        class="block text-[12px] font-bold text-navy-800 uppercase tracking-widest">
-                        {{ field.label }}
-                    </label>
-                    <div class="relative">
-                        {{ field }}
-                        {% if field.help_text %}
-                        <p class="text-[11px] text-slate-400 mt-1">{{ field.help_text|safe }}</p>
-                        {% endif %}
+                <div class="space-y-4">
+                    {% for field in form %}
+                    {% if field.name == 'username' or field.name == 'password' or field.name == 'password_confirm' or 'password' in field.name %}
+                    {% if field.name == 'username' %}
+                    <div class="p-5 bg-slate-50 border-2 border-slate-100 rounded-2xl space-y-4 shadow-inner">
+                        <div class="flex items-center gap-2 mb-1">
+                            <svg class="w-4 h-4 text-navy-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                            </svg>
+                            <span class="text-[11px] font-bold text-navy-900 uppercase tracking-widest">Account Security</span>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="space-y-1">
+                        <label for="{{ field.id_for_label }}"
+                            class="block text-[12px] font-bold text-navy-800 uppercase tracking-widest">
+                            {{ field.label }}
+                        </label>
+                        <div class="relative">
+                            {{ field }}
+                            {% if field.help_text %}
+                            <p class="text-[11px] text-slate-400 mt-1">{{ field.help_text|safe }}</p>
+                            {% endif %}
+                        </div>
                     </div>
+                    
+                    {% if forloop.last or field.name == 'password_confirm' or 'confirm' in field.name %}
+                    </div>
+                    {% endif %}
+                    
+                    {% else %}
+                    <!-- Other Fields -->
+                    <div class="space-y-1">
+                        <label for="{{ field.id_for_label }}"
+                            class="block text-[12px] font-bold text-navy-800 uppercase tracking-widest">
+                            {{ field.label }}
+                        </label>
+                        <div class="relative">
+                            {{ field }}
+                            {% if field.help_text %}
+                            <p class="text-[11px] text-slate-400 mt-1">{{ field.help_text|safe }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
                 </div>
-                {% endfor %}
 
                 <div class="pt-6">
                     <button type="submit"
