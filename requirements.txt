@@ -1,5 +1,5 @@
-# Vercel
 Django>=4.0
+# Vercel Deployment
 whitenoise>=6.0
 openpyxl>=3.0
 gunicorn>=20.0
