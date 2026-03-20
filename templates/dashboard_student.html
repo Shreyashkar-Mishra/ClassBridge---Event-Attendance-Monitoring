@@ -156,6 +156,30 @@
                             AI Learning Companion
                         </h5>
                         <div class="grid grid-cols-1 gap-3">
+                            {% with video_feed=log.get_ai_video_feed %}
+                            {% if video_feed %}
+                            {% for video in video_feed %}
+                            <a href="{{ video.url }}" target="_blank" rel="noopener noreferrer"
+                                class="group flex items-start gap-4 p-4 rounded-xl border border-navy-50 bg-white hover:border-gold-300 hover:bg-gold-50/20 transition-all shadow-sm">
+                                <div
+                                    class="relative flex-shrink-0 w-28 h-16 bg-navy-100 rounded-lg overflow-hidden border border-navy-200 group-hover:border-gold-300 transition-colors">
+                                    <img src="{{ video.thumbnail }}" alt="{{ video.title }}" class="absolute inset-0 w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center bg-black/10 group-hover:bg-transparent transition-colors">
+                                        <svg class="w-8 h-8 text-white drop-shadow-md" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z" />
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="flex-grow min-w-0">
+                                    <p class="text-xs font-bold text-navy-900 group-hover:text-gold-700 transition-colors line-clamp-2 leading-tight">
+                                        {{ video.title }}
+                                    </p>
+                                    <p class="text-[9px] text-slate-500 mt-1 font-bold uppercase tracking-wider">YouTube Tutorial</p>
+                                </div>
+                            </a>
+                            {% endfor %}
+                            {% else %}
+                            {# Fallback to search links if API fails or no results #}
                             {% for video in log.get_ai_video_links %}
                             <a href="{{ video.url }}" target="_blank" rel="noopener noreferrer"
                                 class="group flex items-start gap-4 p-4 rounded-xl border border-navy-50 bg-white hover:border-gold-300 hover:bg-gold-50/20 transition-all shadow-sm">
@@ -173,11 +197,12 @@
                                         class="text-sm font-bold text-navy-900 group-hover:text-gold-700 transition-colors line-clamp-2 leading-tight">
                                         {{ video.topic }}
                                     </p>
-                                    <p class="text-[10px] text-slate-500 mt-2 font-bold uppercase tracking-wider">Search
-                                        Academy</p>
+                                    <p class="text-[10px] text-slate-500 mt-2 font-bold uppercase tracking-wider">Search Academy</p>
                                 </div>
                             </a>
                             {% endfor %}
+                            {% endif %}
+                            {% endwith %}
                         </div>
                     </div>
                 </div>

@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-6x$z69dz)_^muh$11-&l-##40_2*q0b8lwo9c2=12k5g7&hz45'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['.vercel.app', 'now.sh', '127.0.0.1', 'localhost','.onrender.com']
 
@@ -151,3 +151,4 @@ DEFAULT_FROM_EMAIL = 'ClassBridge <shreyashkarm@gmail.com>'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+YOUTUBE_API_KEY = 'AIzaSyDhQZgJLfre0aT0KTOJxvNkjuuWZhYJPQI'

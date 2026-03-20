@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 import urllib.parse
+from django.conf import settings
+import googleapiclient.discovery
 
 class CustomUser(AbstractUser):
     USER_TYPE_CHOICES = (
@@ -59,18 +61,45 @@ class ClassLog(models.Model):
     def __str__(self):
         return f"{self.subject} - {self.date}"
     
-    def get_ai_video_links(self):
+    def get_real_youtube_feed(self, topic):
+        youtube = googleapiclient.discovery.build(
+            "youtube", "v3", developerKey=settings.YOUTUBE_API_KEY
+        )
+
+        request = youtube.search().list(
+            q=f"{self.subject} {topic} tutorial",
+            part="snippet",
+            maxResults=3, # Show top 3 videos
+            type="video"
+        )
+        response = request.execute()
+        
+        videos = []
+        for item in response['items']:
+            videos.append({
+                'title': item['snippet']['title'],
+                'thumbnail': item['snippet']['thumbnails']['high']['url'],
+                'video_id': item['id']['videoId'],
+                'url': f"https://www.youtube.com/watch?v={item['id']['videoId']}"
+            })
+        return videos
+
+    def get_ai_video_feed(self):
+        """Combines multiple topics into a single list of video objects from the API."""
         topics = [t.strip() for t in self.topics_covered.split(',')]
-        if len(topics)==1:
+        if len(topics) == 1:
             topics = [t.strip() for t in self.topics_covered.split('\n') if t.strip()]
 
-        links = []
-        for topic in topics:
-            if len(topic)>3:
-                query = urllib.parse.quote(f"{self.subject} {topic} tutorial")
-                url = f"https://www.youtube.com/results?search_query={query}"
-                links.append({'topic':topic,'url':url})
-        return links
+        all_videos = []
+        # To avoid hitting quota too hard, we only take the first 2 topics
+        for topic in topics[:2]:
+            if len(topic) > 3:
+                try:
+                    all_videos.extend(self.get_real_youtube_feed(topic))
+                except Exception:
+                    # Fallback to empty if API fails or quota exceeded
+                    continue
+        return all_videos
 
                 
 class Absence(models.Model):
