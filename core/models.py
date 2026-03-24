@@ -1,6 +1,5 @@
-from django.db import models
+from django.db import models
 from django.contrib.auth.models import AbstractUser
-import urllib.parse
 from django.conf import settings
 import googleapiclient.discovery
 
@@ -96,22 +95,10 @@ class ClassLog(models.Model):
             if len(topic) > 3:
                 try:
                     all_videos.extend(self.get_real_youtube_feed(topic))
-                except Exception:
+                except Exception:
                     # Fallback to empty if API fails or quota exceeded
                     continue
         return all_videos
-
-                
-class Absence(models.Model):
-    student = models.ForeignKey(Student,on_delete=models.CASCADE)
-    date = models.DateField()
-    reason = models.TextField(blank=True,null=True)
-    is_excused = models.BooleanField(default=False)
-
-    def __str__(self):
-        return f"Absence: {self.student.user.first_name} {self.student.user.last_name} on {self.date}"
-    
-    
 
 class EventParticipation(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
@@ -126,4 +113,10 @@ class EventParticipation(models.Model):
     def __str__(self):
         return f"{self.student.user.first_name} -> {self.event.title}"
 
+class OTPVerification(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='otp_profile')
+    otp = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return f"OTP for {self.user.email}"

@@ -9,7 +9,9 @@ from django.contrib.auth import login
 import openpyxl
 from django.core.mail import EmailMessage
 import io
-
+import random
+from django.core.mail import EmailMessage, send_mail
+from django.conf import settings
 
 def home_page(request):
     if request.user.is_authenticated:
@@ -24,9 +26,24 @@ def register_student(request):
         form = StudentRegistrationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)  # Auto-login after registration
-            messages.success(request, f"Welcome to ClassBridge, {user.first_name}! Your student account has been created.")
-            return redirect('dashboard')
+            # Generate OTP
+            otp_code = str(random.randint(100000, 999999))
+            print(f"\n\n>>> [DEBUG] Generated OTP for new Student [{user.email}]: {otp_code}\n\n")
+            from .models import OTPVerification
+            OTPVerification.objects.create(user=user, otp=otp_code)
+            
+            # Send Email
+            send_mail(
+                'ClassBridge - Verify Your Email',
+                f'Hello {user.first_name},\n\nYour 6-digit verification code is: {otp_code}\n\nWelcome to ClassBridge!',
+                settings.DEFAULT_FROM_EMAIL,
+                [user.email],
+                fail_silently=True,
+            )
+            
+            request.session['verification_email'] = user.email
+            messages.info(request, "Please check your email for the verification code.")
+            return redirect('otp_verify')
     else:
         form = StudentRegistrationForm()
         
@@ -40,9 +57,24 @@ def register_faculty(request):
         form = FacultyRegistrationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)
-            messages.success(request, f"Welcome to the Faculty Portal, Professor {user.last_name}!")
-            return redirect('dashboard')
+            # Generate OTP
+            otp_code = str(random.randint(100000, 999999))
+            print(f"\n\n>>> [DEBUG] Generated OTP for new Faculty [{user.email}]: {otp_code}\n\n")
+            from .models import OTPVerification
+            OTPVerification.objects.create(user=user, otp=otp_code)
+            
+            # Send Email
+            send_mail(
+                'ClassBridge - Verify Your Email',
+                f'Hello Professor {user.last_name},\n\nYour 6-digit verification code is: {otp_code}\n\nWelcome to ClassBridge!',
+                settings.DEFAULT_FROM_EMAIL,
+                [user.email],
+                fail_silently=True,
+            )
+            
+            request.session['verification_email'] = user.email
+            messages.info(request, "Please check your email for the verification code.")
+            return redirect('otp_verify')
     else:
         form = FacultyRegistrationForm()
         
@@ -111,9 +143,11 @@ def dashboard(request):
     elif user.user_type == 'coordinator':
         # Get all registered students for administration
         all_students = Student.objects.all().order_by('batch', 'roll_number')
+        recent_logs = ClassLog.objects.all().order_by('-date')[:10]
         context = {
             'coordinator_profile': user.coordinator_profile,
-            'all_students': all_students
+            'all_students': all_students,
+            'class_logs': recent_logs
         }
         return render(request, 'dashboard_coordinator.html', context)
     else:
@@ -381,3 +415,59 @@ def delete_student(request, student_id):
         return redirect('dashboard')
     
     return render(request, 'registration/confirm_delete_student.html', {'student': student})
+
+def otp_verify(request):
+    if request.method == 'POST':
+        otp = request.POST.get('otp')
+        email = request.session.get('verification_email')
+        
+        if not email:
+            messages.error(request, "Session expired. Please register again.")
+            return redirect('home')
+            
+        from .models import OTPVerification, CustomUser
+        user = CustomUser.objects.filter(email=email).first()
+        if user:
+            otp_record = OTPVerification.objects.filter(user=user).first()
+            if otp_record and otp_record.otp == otp:
+                user.is_active = True
+                user.save()
+                otp_record.delete()  # Clear OTP after successful use
+                login(request, user)
+                if user.user_type == 'student':
+                    messages.success(request, f"Email verified! Welcome to ClassBridge, {user.first_name}.")
+                else:
+                    messages.success(request, f"Email verified! Welcome, Professor {user.last_name}.")
+                return redirect('dashboard')
+            else:
+                messages.error(request, "Invalid Verification Code. Please try again.")
+        else:
+            messages.error(request, "User not found.")
+            
+    return render(request, 'registration/otp_verify.html')
+
+def resend_otp(request):
+    if request.method == 'POST':
+        email = request.session.get('verification_email')
+        if email:
+            from .models import OTPVerification, CustomUser
+            user = CustomUser.objects.filter(email=email).first()
+            if user:
+                otp_code = str(random.randint(100000, 999999))
+                print(f">>> [DEBUG] Generated Resend OTP for ({user.email}): {otp_code}")
+                # Update or create
+                OTPVerification.objects.update_or_create(
+                    user=user,
+                    defaults={'otp': otp_code}
+                )
+                # Send Email
+                send_mail(
+                    'ClassBridge - Your New Verification Code',
+                    f'Hello,\n\nYour new verification code is: {otp_code}',
+                    settings.DEFAULT_FROM_EMAIL,
+                    [user.email],
+                    fail_silently=True,
+                )
+                messages.success(request, "A new code has been sent to your email.")
+            return redirect('otp_verify')
+    return redirect('home')

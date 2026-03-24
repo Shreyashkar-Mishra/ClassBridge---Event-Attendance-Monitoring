@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="min-h-screen flex bg-slate-50 items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-md w-full space-y-8 bg-white p-10 rounded-2xl shadow-xl text-center">
+    <div>
+      <h2 class="mt-6 text-3xl font-extrabold text-navy-900">
+        Verify Your Email
+      </h2>
+      <p class="mt-2 text-sm text-slate-600">
+        We've sent a 6-digit verification code to <strong>{{ request.session.verification_email }}</strong>. Please enter the code below to complete your registration.
+      </p>
+    </div>
+    
+    {% if messages %}
+    <div class="mt-4">
+        {% for message in messages %}
+        <div class="p-3 rounded-lg text-sm {% if message.tags == 'error' %}bg-red-50 text-red-800 border border-red-200{% else %}bg-blue-50 text-blue-800 border border-blue-200{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <form class="mt-8 space-y-6" method="POST">
+      {% csrf_token %}
+      <div class="rounded-md shadow-sm -space-y-px">
+        <div>
+          <label for="otp" class="sr-only">OTP Code</label>
+          <input id="otp" name="otp" type="text" required class="appearance-none rounded-none relative block w-full px-3 py-3 border border-slate-300 placeholder-slate-500 text-gray-900 rounded-md focus:outline-none focus:ring-navy-500 focus:border-navy-500 focus:z-10 sm:text-lg text-center tracking-[0.5em] font-bold" placeholder="------" maxlength="6">
+        </div>
+      </div>
+      <div>
+        <button type="submit" class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-burgundy-700 hover:bg-burgundy-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-burgundy-900">
+          Verify Email & Login
+        </button>
+      </div>
+    </form>
+    
+    <div class="mt-6 text-sm">
+        <p class="text-slate-500">Didn't receive the code?</p>
+        <form action="{% url 'resend_otp' %}" method="POST" class="inline">
+            {% csrf_token %}
+            <button type="submit" class="font-medium text-navy-600 hover:text-navy-500 underline mt-1">Resend Code</button>
+        </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

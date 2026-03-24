@@ -13,7 +13,10 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from pathlib import Path
 import os
 import dj_database_url
+from dotenv import load_dotenv
 
+# Load environment variables from .env file
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-6x$z69dz)_^muh$11-&l-##40_2*q0b8lwo9c2=12k5g7&hz45'
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-default-key-for-dev-only')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -145,10 +148,10 @@ EMAIL_USE_TLS = False
 # NOTE: If using Gmail, you MUST generate an "App Password" via your Google Account Settings.
 # Standard passwords will be blocked by Google Security.
 EMAIL_HOST_USER = 'shreyashkarm@gmail.com' 
-EMAIL_HOST_PASSWORD = 'bmrk mxan cxxb qnbm'  
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = 'ClassBridge <shreyashkarm@gmail.com>'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-YOUTUBE_API_KEY = 'AIzaSyDhQZgJLfre0aT0KTOJxvNkjuuWZhYJPQI'
+YOUTUBE_API_KEY = os.getenv('YOUTUBE_API_KEY')

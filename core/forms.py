@@ -46,6 +46,7 @@ class StudentRegistrationForm(UserCreationForm):
 
     def save(self, commit=True):
         user = super().save(commit=False)
+        user.is_active = False # Require OTP Verification
         user.user_type = 'student'
         user.first_name = self.cleaned_data['first_name']
         user.last_name = self.cleaned_data['last_name']
@@ -71,6 +72,7 @@ class FacultyRegistrationForm(UserCreationForm):
 
     def save(self, commit=True):
         user = super().save(commit=False)
+        user.is_active = False # Require OTP Verification
         user.user_type = 'faculty'
         user.first_name = self.cleaned_data['first_name']
         user.last_name = self.cleaned_data['last_name']
